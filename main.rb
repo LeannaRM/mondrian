@@ -10,11 +10,15 @@ get("/index") {
 	erb :index
 }
 
-get('/saveddata') {
-	painting.returnjson
+get('/saveddatanames') {
+	return painting.returnnamelist
 }
 
-get("/savenew"){
+get('/savedpainting') {
+	return painting.returnOnePainting(params)
+}
+
+post ("/savenew"){
 	painting.save(params)
-	# redirect('/index')
+	return nil
 }

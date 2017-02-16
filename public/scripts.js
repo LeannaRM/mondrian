@@ -32,17 +32,7 @@ window.addEventListener("load", function (){
 	function savePainting(e){
 		var d = new Date();
 		querystring = makeQueryString(d);
-		// makeQueryPOSTRequest('/savenew',querystring);
-
-		var ourRequest = new XMLHttpRequest();
-		ourRequest.open('GET', '/savenew')
-		ourRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		ourRequest.send(querystring)
-
-
-
-
-
+		makeRequest('POST','/savenew?'+querystring);
 		printSavedToScreen(d);
 		addClickListenerToClassEach("saveddata",showSavedPainting);
 		e.preventDefault();
@@ -76,7 +66,8 @@ window.addEventListener("load", function (){
 	createSavedDataList();
 
 	function createSavedDataList() {
-		makeJSONGETRequest('/saveddata', function(data) {
+		makeRequest('GET','/saveddatanames', function(data) {
+			data = JSON.parse(data);
 			createlist(data);
 			addClickListenerToClassEach("saveddata",showSavedPainting);
 		});
@@ -87,7 +78,6 @@ window.addEventListener("load", function (){
 			var d = new Date();
 			d.setTime(data[i]["date"]);
 			printSavedToScreen(d);
-			i += 1
 		}
 	}
 
@@ -95,10 +85,9 @@ window.addEventListener("load", function (){
 
 	function showSavedPainting(e){
 		paintingDate = e.target.getAttribute('id');
-
-		makeJSONGETRequest('/saveddata', function(data){
-			paintingNumber = findPaintingNumber(data, paintingDate);
-			showPainting(data[paintingNumber]);
+		makeRequest('GET','/savedpainting'+"?date="+paintingDate, function(data){
+			data = JSON.parse(data)
+			showPainting(data);
 		})
 	}
 
@@ -109,16 +98,6 @@ window.addEventListener("load", function (){
 			rgbcolor = colorhash[data[id]]
 			boxes[i].style.backgroundColor = rgbcolor
 		}
-	}
-
-	function findPaintingNumber(data, paintingDate) {
-		var rightone = false;
-		var i =0;
-		while (rightone == false) {
-			rightone = paintingDate == data[i]["date"];
-			i++
-		}
-		return i -1
 	}
 
 

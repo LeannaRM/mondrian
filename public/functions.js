@@ -10,19 +10,31 @@ function addClickListenerToID(idname,functionname) {
 	trigger.addEventListener("click",functionname);
 }
 
-function makeQueryPOSTRequest(location,querystring) {
+function makeRequest(GETPOST,locationQuerystring,onloadfunction) {
 	var ourRequest = new XMLHttpRequest();
-	ourRequest.open('POST', location, true);
-	ourRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	ourRequest.send(querystring);
+	ourRequest.open(GETPOST, locationQuerystring, true);
+	if (onloadfunction != undefined) {
+		ourRequest.onload = function() {
+			var result = ourRequest.responseText
+			onloadfunction(result);
+		}
+	}
+	ourRequest.send();
 }
 
-function makeJSONGETRequest(location, onloadfunction) {
-	var ourRequest = new XMLHttpRequest();
-	ourRequest.open('GET', location)
-	ourRequest.onload = function(){
-		var ourdata = JSON.parse(ourRequest.responseText)
-		onloadfunction(ourdata);
-	}
-	ourRequest.send()
-}
+// function makeQueryPOSTRequest(location,querystring) {
+// 	var ourRequest = new XMLHttpRequest();
+// 	ourRequest.open('POST', location, true);
+// 	ourRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+// 	ourRequest.send(querystring);
+// }
+
+// function makeJSONGETRequest(location, onloadfunction) {
+// 	var ourRequest = new XMLHttpRequest();
+// 	ourRequest.open('GET', location)
+// 	ourRequest.onload = function(){
+// 		var ourdata = JSON.parse(ourRequest.responseText)
+// 		onloadfunction(ourdata);
+// 	}
+// 	ourRequest.send()
+// }
